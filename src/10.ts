@@ -1,4 +1,6 @@
 import * as Rx from "rxjs";
+import {from, interval, of, zip} from "rxjs";
+import {map, take, withLatestFrom} from "rxjs/operators";
 //
 // //combineLatest会取得各个observable最后送出的值，再输出成一个值
 // // newest送出了0，但此时source并没有送出过任何值，所以不会执行callback
@@ -42,23 +44,56 @@ import * as Rx from "rxjs";
 // //结果：0、2、4、complete
 
 
-
 //withLatestFrom运作方式跟combineLatest有点像，只是它有主从的关系，只有在主要的observable送出新的值时，
 //才会执行callback，附随的observable只是在背景下运作
 //withLatestFrom会在main送出值的时候执行callback，但请注意如果main送出值时some
 //之前没有送出过任何值callback仍然不会执行！
-const main = Rx.Observable.from('hello').zip(Rx.Observable.interval(500), (x, y) => x);
-const some = Rx.Observable.from([0,1,0,0,0,1]).zip(Rx.Observable.interval(300), (x, y) => x);
 
-const example3 = main.withLatestFrom(some, (x, y) => {
-    // console.log(`x: ${x}, y: ${y}`);
-    return y === 1 ? x.toUpperCase() : x;
-});
-example3.subscribe({
-    next: (value) => { console.log(value); },
-    error: (err) => { console.log('Error: ' + err); },
-    complete: () => { console.log('complete'); }
-});
+// const main = from('hello').zip(Rx.Observable.interval(500), (x, y) => x);
+// const some = Rx.Observable.from([0,1,0,0,0,1]).zip(Rx.Observable.interval(300), (x, y) => x);
+//
+// const example3 = main.withLatestFrom(some, (x, y) => {
+//     // console.log(`x: ${x}, y: ${y}`);
+//     return y === 1 ? x.toUpperCase() : x;
+// });
+// example3.subscribe({
+//     next: (value) => { console.log(value); },
+//     error: (err) => { console.log('Error: ' + err); },
+//     complete: () => { console.log('complete'); }
+// });
+const main1 = from('hello');
+const main2 = from([0,1,0,0,0,1]);
+const timer1 = interval(500);
+const timer2 = interval(300);
+// const newest$ = interval(300).pipe(take(6));
+// const source$ = interval(500).pipe(take(3));
+const obj1 = zip(main1, timer1);
+const obj2 = zip(main2, timer2);
+obj1.pipe(withLatestFrom(obj2)).subscribe(x => console.log('x1: ', x));
+
+// let age$ = of<number>(27, 25, 29);
+// let name$ = of<string>('a', 'b', 'c');
+// zip(age$, name$).pipe(
+//     map((age: number, name: string) => ({age, name}))
+// );
+// let age$ = of<number>(27, 25, 29);
+// let name$ = of<string>('Foo', 'Bar', 'Beer');
+// let isDev$ = of<boolean>(true, true, false);
+//
+// zip(age$, name$, isDev$).pipe(
+//     map(([age, name, isDev])=>({age, name, isDev}))
+// ).subscribe(x => console.log(x));
+// const some = from([0,1,0,0,0,1]).zip(Rx.Observable.interval(300), (x, y) => x);
+
+// const example3 = main.withLatestFrom(some, (x, y) => {
+// console.log(`x: ${x}, y: ${y}`);
+// return y === 1 ? x.toUpperCase() : x;
+// });
+// example3.subscribe({
+//     next: (value) => { console.log(value); },
+//     error: (err) => { console.log('Error: ' + err); },
+//     complete: () => { console.log('complete'); }
+// });
 //结果: h、e、l、L、O
 
 

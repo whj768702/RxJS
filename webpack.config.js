@@ -4,10 +4,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: [
+        "./src/observable.ts"
         // "./main.ts",
         // "./src/08.ts",
         // "./src/09.ts"
-        "./src/10.ts"
+        // "./src/10.ts"
     ],
     resolve: {
         extensions: [".js", ".ts"]
