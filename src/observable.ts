@@ -1,22 +1,17 @@
-import {Observable} from "rxjs";
-import {take} from "rxjs/operators";
+import { Observable } from "rxjs";
 
-const observable = Observable.create((observer) => {
-    observer.next(1);
-    observer.next(2);
-    observer.next(3);
-    setTimeout(() => {
-        observer.next(4);
-        observer.complete();
+const onSubscribe = (observer: Observable) => {
+    let number = 1;
+    const handle = setInterval(() => {
+        observer.next(number++);
+        if (number > 3) {
+            clearInterval(handle);
+        }
     }, 1000);
-});
-const observer = {
-    next: (value) => {console.log('next: ', value)},
-    error: (error) => {console.log('error: ', error)},
-    complete: () => {console.log('complete')}
 };
-function startPrint() {
-    observable.pipe(take(1)).subscribe(observer);
+
+const source$ = new Observable(onSubscribe);
+const theObserver = {
+    next: (item:Number) => console.log(item)
 }
-const element = document.getElementById('print');
-element.addEventListener('click', startPrint);
+source$.subscribe(theObserver);
