@@ -1,5 +1,6 @@
 /*
 限制在duration时间范围内，从上游传递给下游数据的个数。
+简单理解：duration时间内，来多个数据，只取一个。
 */
 import { interval } from "rxjs";
 import { throttleTime } from "rxjs/operators";
