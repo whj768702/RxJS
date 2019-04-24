@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Subject } from 'rxjs';
+import { Subject, from } from 'rxjs';
 import { scan } from "rxjs/operators";
+import CounterView from './CounterView.js';
 
 function Counter () {
   let [count, setCount] = useState(0);
@@ -16,11 +17,5 @@ function Counter () {
     />
   );
 }
-const CounterView = ({ count, onIncrement, onDecrement }) => (
-  <div>
-    <h1>Count: {count}</h1>
-    <button onClick={onIncrement}>+</button>
-    <button onClick={onDecrement}>-</button>
-  </div>
-);
+
 export default Counter;
