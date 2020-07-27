@@ -9,13 +9,13 @@ const observe = (WrappedComponent, observableFactory, defaultState) => {
     }
 
     render() {
-      return <WrappedComponent {...this.props} {...this.state}/>
+      return <WrappedComponent {...this.props} {...this.state} />;
     }
     componentWillUnmount() {
-      this.subscription.unsubsribe();
+      this.subscription.unsubscribe();
     }
     componentDidMount() {
-      this.subscription = this.props$.subscribe(value => this.setState(value));
+      this.subscription = this.props$.subscribe((value) => this.setState(value));
     }
   };
 };

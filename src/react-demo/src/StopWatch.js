@@ -29,12 +29,12 @@ const StopWatch = observe(
     const button = new Subject();
 
     const time$ = button.pipe(
-      switchMap((value) => {
-        switch (value) {
+      switchMap(({ type, value }) => {
+        switch (type) {
           case 'start': {
             return interval(10).pipe(
               timeInterval(),
-              scan((result, ti) => result + ti.interval, 0),
+              scan((result, ti) => result + ti.interval, value || 0),
             );
           }
           case 'stop': {
@@ -55,9 +55,9 @@ const StopWatch = observe(
       merge(time$),
       map((value) => ({
         milliseconds: value,
-        onStop: () => button.next('stop'),
-        onStart: () => button.next('start'),
-        onReset: () => button.next('reset'),
+        onStop: () => button.next({ type: 'stop', value }),
+        onStart: () => button.next({ type: 'start', value }),
+        onReset: () => button.next({ type: 'reset', value }),
       })),
     );
   },
