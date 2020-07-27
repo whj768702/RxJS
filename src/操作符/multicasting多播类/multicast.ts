@@ -1,8 +1,8 @@
-import { interval, Subject } from "rxjs";
+import { interval, Subject, ConnectableObservable } from "rxjs";
 import { take, multicast } from "rxjs/operators";
 
-const coldeSource = interval(1000).pipe(take(3));
-const tick = coldeSource.pipe(multicast(() => new Subject()));
+const coldSource = interval(1000).pipe(take(3));
+const tick = coldSource.pipe(multicast(() => new Subject())) as ConnectableObservable<any>;
 
 tick.subscribe(val => console.log(`observer 1: ${val}`));
 setTimeout(() => {
